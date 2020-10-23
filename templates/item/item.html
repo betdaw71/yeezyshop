@@ -1,0 +1,476 @@
+{% load static %}
+<html>
+    <head>
+        <title>Wyzy Boost - Интернет магазин</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static './slick/slick.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static './slick/slick-theme.css' %}">
+ 	<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+         <link rel="shortcut icon" href="{% static 'img/main-logo.png' %}" type="image/png">
+         
+        <link rel="stylesheet" href="{% static 'OwlCarousel2-master/dist/assets/owl.carousel.min.css' %}">
+        <link rel="stylesheet" href="{% static 'OwlCarousel2-master/dist/assets/owl.theme.default.min.css' %}">
+        <link rel="stylesheet" href="{% static 'lightbox.css' %}">
+        
+<!--    <link rel="stylesheet" href="./owl.carousel.min.css">-->
+<!--    <link rel="stylesheet" href="./owl.theme.default.min.css">-->
+       <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous">
+        </script>
+    <script type="text/javascript" src="{% static 'app.js'%}"></script>
+    <style>
+        @media screen and (max-width: 500px){
+            .main{
+                min-height: 50vh;
+                max-height: 50vh;
+            }
+        }
+    
+    </style>
+    </head>
+    <body>
+       <div class="getsum" data-url='{% url "getsum" %}'></div>
+       <div class="getcart" data-url='{% url "getcart" %}'></div>
+       <div class="getprice" data-url='{% url "getprice" %}'></div>
+        <div class="sucsess">
+            <div class="sucsess__container">
+                <div class="sucsess__container-close"><i class="fa fa-times" aria-hidden="true"></i></div>
+                <div class="sucsess__container-title">Ваша заявка успешно отправлена</div>
+            </div>
+	    </div>
+       <div class="order">
+            <div class="order__container">
+                <div class="title">
+                    <div class="title__close"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
+                    <div class="title__text">Оформление заказа</div>
+                </div>
+                <div class="body">
+                    <form method='POST' action='{% url "order" %}' id='order-form' class="ajax">
+                        {% csrf_token %}
+                        <div class="form__item">	
+                            <input type="text" name="name" placeholder="Имя">	
+                        </div>
+                        <div class="form__item">	
+                            <input type="text" name="mail" placeholder="E-mail">	
+                        </div>
+                        <div class="form__item">	
+                            <input type="text" name="tel" placeholder="Телефон">	
+                        </div>
+                        <div class="form__item">	
+                            <textarea placeholder="Сообщение" name='message'></textarea>
+                        </div>
+                        <div class="form__title">как удобно оплатить?</div>
+                        <div class="form__item">
+                            <select name="pay">
+                                <option>Начличные</option>
+                                <option>Банковская карта(перевод)</option>
+                            </select> 
+                        </div>
+                        <div class="form__item">
+                            <div class="form__info">
+                                <div class="form__info-ico"><i class="fa fa-info" aria-hidden="true"></i></div>
+                                <div class="form__info-text">
+                                    Перевод можно сделать после подтверждения заказа нашим оператором.
+                                </div>
+                            </div>						
+                        </div>
+                        <div class="form__item">
+                            <textarea placeholder="Аддрес доставки" name="addres"></textarea>
+                        </div>
+                        <input type="hidden" id="dataOrder" name='dataOrder' value="">
+                        <div class="form__item">
+                            <input type="submit"  >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="basket-menu">
+            <div class="basket-menu__container">
+                <div class="header">
+                    <div class="one"><i class="fa fa-shopping-basket" aria-hidden="true"></i></div>
+                    <div class="two">Корзина</div>
+                    <div class="three"><i class="fa fa-times" aria-hidden="true"></i></div>
+                </div>
+                <div class="body">
+                    <div class="left">
+<!--
+                        {% for item in cart %}
+                        <div class="basket__item"id=''>
+                            <div class="wrapper">
+                                <img src='{{ item.image }}'>
+                                <div class="basket__item-desc">{{ item.title }}</div>
+                                <div class="basket__item-price"><span class="price__num"id=''>{{ item.price }}</span><span><i class="fa fa-rub" aria-hidden="true"></i>/шт</span></div>
+                                </div><div class="item__delete" id=''><i class="fa fa-trash delete" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        {% endfor %}
+-->
+                    </div>
+                    <div class="right">
+                        <div class="right__sum"><span class='right__offer-sum'></span> <i class="fa fa-rub" aria-hidden="true"></i> - Общая Стоимость </div>
+                        <div class="right__btns">
+                            <div class="right__offer">Оформить заказ</div>
+                            <div class="right__more"><a href='#'>Доставка не входит в стоимость заказа</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       	<div class="basket-i-w">
+            <div class="basket-icon" data-before=''>
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                
+            </div>
+	    </div>
+        <div class="main" style="background-image: none;min-height:1vh;max-height: 20vh;">
+            <div class="header">
+                <div class="header__logo"><a href='{% url "index" %}'><img src='{% static "img/main_logo.png"%}'></a></div>
+                <div class="header__info">
+                    <div class="header__info-item">Заказы ТОЛЬКО оригинальных моделей</div>
+                    <div class="header__info-item">Москва | Доставка по всему миру</div>
+                </div>
+                <div class="header__contacts">
+                    <div class="header__contacts-social">
+                        <div class="header__contacts-social__item"><a href='https://www.instagram.com/wyzy_boost/'><img src='{% static "img/inst.png"%}'></a></div>
+                        <div class="header__contacts-social__item"><a href='https://wa.me/79614807888'><img src='{% static "img/whatsapp.png"%}'></a></div>
+                    </div>
+                    <div class="header__contacts-number">
+                        <div class="header__contacts-number__phone"><a href='tel:79614807888'>+7 (961) 480 78 88</a></div>
+                        <div class="header__contacts-number__time">Ежедневно с 10:00 до 22:00</div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav">
+<!--                <div class="nav__item"><a href="#">Главная</a></div>-->
+                <div class="nav__item"><a href="{% url 'index' %}#about">О компании</a></div>
+                <div class="nav__item"><a href="{% url 'index' %}#delivery">Доставка и оплата</a></div>
+                <div class="nav__item"><a href="{% url 'category' 'yeezy-boost-350' %}">Yeezy 350</a></div>
+                <div class="nav__item"><a href="{% url 'category' 'yeezy-boost-500' %}">Yeezy 500</a></div>
+                <div class="nav__item"><a href="{% url 'category' 'yeezy-boost-700' %}">Yeezy 700</a></div>
+                <div class="nav__item"><a href="{% url 'category' 'yeezy-boost-slide' %}">Yeezy Slide</a></div>
+                <div class="nav__item"><a href="{% url 'index' %}#size">Как выбрать размер</a></div>
+                <div class="nav__item"><a href="{% url 'index' %}#contact">Контакты</a></div>
+            </div>
+        </div>
+        <div class="product">
+            <div class="description-nav"><i class="fa fa-home" aria-hidden="true"></i><span><a href='{% url 'index' %}'>Главная</a></span>  /   <span><a href="{% url 'category' item.category.slug %}">{{item.category.title}}</a></span>/<span>{{item.title}}</span></div>
+            <div class="product__wrapper">
+                <div class="product__img">
+                    <div class="owl-carousel2">
+                       {% for i in item.images.all %}
+                        <div class="img-item">
+                            <a href="{{ i.image.url }}" data-lightbox="lbox"><img src="{{ i.image.url }}"></a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="product__description">
+                    <div class="product__description-title">{{item.title}}</div>
+                    <div class="product__description-category"><span>Категория:</span> <a href="{% url 'category' item.category.slug %}">{{item.category.title}}</a></div>
+                    <div class="product__description-price">{{item.price}}<i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="product__description-size">
+                        <div class="owl-carousel" id='{{ p.pk }}'>
+                           {% for i in item.get_size %}
+                            <div class="some_class">{{ i }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="product__description-btn" data-id='{{item.pk}}'>
+                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>В корзину
+                    </div>
+                    <div class="product__description-meta">Метки : 
+                        <a href="#"> {{item.category.title}}</a>,
+                        <a href="#"> {{item.title}}</a>,
+                        <a href="#"> Adidas Yeezy Boost кроссовки оптом</a>,
+                        <a href="#"> YEEZY BOOST</a>,
+                        <a href="#"> YEEZY BOOST кроссовки оптом</a>,
+                        <a href="#"> YEEZY BOOST 350 купить</a>,
+                        <a href="#"> ADIDAS YEEZY BOOST 350 купить</a>,
+                        <a href="#"> ADIDAS YEEZY BOOST 350 заказать</a>,
+                        <a href="#"> YEEZY BOOST кроссовки</a>,
+                        <a href="#"> YEEZY кроссовки купить</a>
+
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="product__about">
+                Мы крупная контора, которая занимается оптовыми продажами кроссовок Adidas Yeezy Boost 350, Yeezy 500, Yeezy Boost 700.
+                Если Вы работаете, занимаетесь бизнесом Вам некогда, мы отправим кроссовки Вам домой или сразу в магазин по тому адресу, который Вы укажите. От Вас потребуется только чтоб написали фамилию, имя, отчество, серию и номер паспорта. Наши Yeezy Boost 350 идут каждая пара в оригинальной коробке, производство Адидас Изи Вьетнам а не Китай.
+                <br>
+                Это светоотражающие модель Adidas Yeezy Boost.
+<br>
+               <br>
+                Успейте купить, уважаемые оптовики если Вы привезете в свой город мужские кроссовки оптом то продадите все без остатков.
+                <br>
+               <br>
+                {{item.description}}
+                <br>
+               <br>
+                💥Каждая пара в коробке<br>
+                👍У нас только качественные кроссовки Adidas Yeezy Boost.<br>
+                ✍Для быстрого заказа пишите в WhatsApp, Viber, Telegram.<br>
+                ✅ +7 (961) 480 78 88 - Симон<br>
+                🔵🔵🔵🔵🔵🔵🔵🔵<br>
+                <br>
+               <br>
+                Звоните ответим Всем.
+                Отправим Сдэком курьерской компанией, Деловыми линиями в любой город России.
+            </div>
+        </div>
+        {% if same != None %}
+            <div class="same__title">Похожие товары</div>
+            <div class="catalog">
+                {% for p in same %}
+                <div class="catalog__item" id='{{ p.pk }}'>
+                    <div class="catalog__item-title"><a href='{% url "item" p.category.slug p.pk %}'>{{ p.title }}</a></div>
+    <!--                <div class="catalog__item-img"><img src="{% static 'img/yeezy350ex.png'%}"></div>-->
+                   <div class="catalog__item-img">
+                        <div class="owl-carousel1">
+                           {% for i in p.images.all %}
+                             <a href="{% url 'item' p.category.slug p.pk %}" ><div class="img-item" style='background-image: url({{ i.image.url }});background-size: 100%;background-repeat: no-repeat;background-position: bottom;'>
+                            </div></a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="catalog__item-size">
+                        <div class="owl-carousel" id='{{ p.pk }}'>
+                           {% for i in p.get_size %}
+                            <div class="some_class">{{ i }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="catalog__item-price"><span class="catalog__item-price-span">{{p.price }}</span><i class="fa fa-rub" aria-hidden="true"></i></div>
+                    <div class="catalog__item-btn" >
+                        <div class="btn-wrapper" data-id='{{ p.pk }}'>
+                            Заказать
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class=""></div>
+        {% endif %}
+        <div class="same__title">Возможно Вас также заинтересует…</div>
+        <div class="catalog">
+            {% for p in may %}
+            <div class="catalog__item" id='{{ p.pk }}'>
+                <div class="catalog__item-title"><a href='{% url "item" p.category.slug p.pk %}'>{{ p.title }}</a></div>
+<!--                <div class="catalog__item-img"><img src="{% static 'img/yeezy350ex.png'%}"></div>-->
+               <div class="catalog__item-img">
+                    <div class="owl-carousel1">
+                       {% for i in p.images.all %}
+                        <a href="{% url 'item' p.category.slug p.pk %}" ><div class="img-item" style='background-image: url({{ i.image.url }});background-size: 100%;background-repeat: no-repeat;background-position: bottom;'>
+                            </div></a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="catalog__item-size">
+                    <div class="owl-carousel" id='{{ p.pk }}'>
+                       {% for i in p.get_size %}
+                        <div class="some_class">{{ i }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="catalog__item-price"><span class="catalog__item-price-span">{{p.price }}</span><i class="fa fa-rub" aria-hidden="true"></i></div>
+                <div class="catalog__item-btn" >
+                    <div class="btn-wrapper" data-id='{{ p.pk }}'>
+                        Заказать
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+<!--
+        <div class="map">
+        <div class="map__cart">
+            <div class="map__cart-img"><img src="{% static 'img/map-img.png'%}"></div>
+            <div class="map__cart-body">
+                <div class="map__cart-title">Контакты</div>
+                <div class="map__cart-desc">
+                    <div class="map__cart-desc__item"><img src="{% static 'img/map_ico1.png'%}"><a href='tel:79614807888' style="color: black;text-decoration: none;">+7(961) 480-78-88</a></div>
+                    <div class="map__cart-desc__item"><img src="{% static 'img/map_ico2.png'%}">Москва, Метро - Славянский бульвар</div>
+                </div>
+                <div class="map__cart-footer">Звоните перед приездом!</div>
+            </div>
+        </div>
+<iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A933f5626503eead1cae567f1cf9e1175f1d0b6a85c8e1feb5b138689e0718e50&amp;source=constructor" width="100%" height="60%" frameborder="0"></iframe>
+        </div>
+-->
+        <div class="footer" id='contact'>
+            <div class="footer__first">
+                <div class="footer__logo">
+                    <img src="{% static 'img/footer__logo.png'%}" alt="">
+                </div>
+                <div class="footer__links">
+                    <div class="footer__links-item">
+                        <a href="{% url 'index' %}">Главная</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'index' %}#about">О компании</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'index' %}#delivery">Доставка и оплата</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'index' %}#size">Как выбрать размер</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'index' %}#contact">Контакты</a>
+                    </div>
+                </div>
+                 <div class="footer__links">
+                    <div class="footer__links-item">
+                        <a href="{% url 'category' 'yeezy-boost-350' %}">Yeezy Boost 350</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'category' 'yeezy-boost-500' %}">Yeezy Boost 500</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'category' 'yeezy-boost-700' %}">Yeezy Boost 700</a>
+                    </div>
+                    <div class="footer__links-item">
+                        <a href="{% url 'category' 'yeezy-boost-slide' %}">Yeezy Boost Slide</a>
+                    </div>
+                    
+                </div>
+                <div class="footer__contacts">
+                    <div class="footer__contacts-phone"><a href='tel:79614807888' style="color: white;text-decoration: none;">+7(961) 480-78-88</a></div>
+                    <div class="footer__contacts-time">Ежедневно с 10 до 22</div>
+                    <div class="footer__contacts-social">
+                        <div class="footer__contacts-social__item1"><a href='https://wa.me/79614807888'><img src="{% static 'img/whatsapp.png'%}" alt=""></a></div>
+                        <div class="footer__contacts-social__item"><a href='https://www.instagram.com/wyzy_boost/'><img src="{% static 'img/inst.png'%}" alt=""></a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer__second">
+                <div class="footer__second-item">WyyzyBoost</div>
+                <div class="footer__second-item">Сайт разработан - MultiTech</div>
+            </div>
+        </div>
+        
+        
+
+
+        <script src="{% static 'lightbox.min.js' %}"></script>
+    <script src="{% static 'OwlCarousel2-master/dist/owl.carousel.min.js' %}"></script>
+    <script type="text/javascript">
+
+    $('body').on('click','.product__description-btn',function(){
+        console.log('asdasdas')
+        var idd = $(this).data('id');
+        var size = $('.product__description-size').find('.center').find('.some_class').text();
+        var data = {};
+        console.log(size);
+        console.log(idd);
+        var url = '{% url "addtocart" "0" "1" %}'.replace('0',idd).replace('1',size)
+         $.ajax({
+            url : url,
+            type:'GET',
+            data :data,
+            success : function(response){
+                console.log('сообщение отправленно');
+            }
+        });
+    });
+    $('body').on('click','.item__delete',function(){
+        var data = {}
+        var pk = $(this).attr('id');
+        console.log('asdasd');
+        var url = "{% url 'delfromcart' '0' %}".replace('0',pk)
+        $.ajax({
+            url : url,
+            type:'GET',
+            data :data,
+            success : function(response){
+                console.log('сообщение отправленно');
+            }
+        });
+    });
+        $(".owl-carousel1").owlCarousel({
+//            navigation : true,
+//            startPosition : 1,
+            nav : false,
+            dots:false,
+            items:1,
+            autoplay:true,
+            autoplayTimeout:10000,
+            loop:true,
+            autoplayHoverPause:true
+        });
+        $(".owl-carousel").owlCarousel({
+            navigation : true,
+            center : true,
+            startPosition : 2,
+            nav : true,
+            dots:true,
+        });
+        $('.owl-carousel2').owlCarousel({
+            navigation : false,
+            nav : false,
+            dots:false,
+            arrows:false,
+            autoplay:true,
+            autoplayTimeout:1500,
+            items:1,
+        });
+
+    </script>  
+<!--	<script src="https://code.jquery.com/jquery-2.2.0.min.js" type="text/javascript"></script>-->
+	<script src="{% static 'slick/slick.js'%}" type="text/javascript" charset="utf-8"></script>
+<!--<script src="owl.carousel.js" type="text/javascript"></script>-->
+	<script type="text/javascript">
+
+	    $(document).on('ready', function() {
+//	      $(".owl-carousel2").slick({
+//	        dots: false,
+//	        infinite: true,
+//	        slidesToShow: 1,
+//	        slidesToScroll: 1,
+//	        autoplay : false,
+//	        arrows:true,
+//	        autoplaySpeed:3000,
+////            centerMode: true,
+//            nextArrow: '<img src="{% static "img/next.png"%}" alt=""  >',
+//            prevArrow: '<img src="{% static "img/before.png"%}" alt="">',
+//
+//          });
+
+//        $('.regular1').slick({
+//	        dots: true,
+//	        infinite: false,
+//	        slidesToShow: 1,
+//	        slidesToScroll: 1,
+//	        autoplay : false,
+//	        arrows:false,
+//	        autoplaySpeed:3000,
+////            adaptiveHeight: true,
+////            centerMode: true,
+//
+//          });
+
+//          $(".catalog-slide").owlCarousel({
+//            items: 1,
+//            loop: false,
+//            nav: true
+//         
+//        });
+//	       $('.catalog').slick({
+//               dots:true,
+//               infinite: false,
+//               arrows:false,
+//               slidesToShow: 3,
+//               adaptiveHeight: true,
+//               rows: 2,
+//               adaptiveHeight: true,
+//           });
+//            $('.catalog').slick('slickSetOption', 'dots', true, true);
+        });
+        
+    </script>
+        
+        
+    </body>
+</html>
