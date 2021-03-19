@@ -123,12 +123,16 @@ THOUSAND_SEPARATOR = ' '
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = '/static/'
+# STATIC_ROOT = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+import dj-database-url
+
+db_from_env = dj-database-url.config()
+DATABASE['default'].update(db_from_env)
 
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
