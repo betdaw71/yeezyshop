@@ -129,9 +129,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 #     os.path.join(BASE_DIR, 'static'),
 # )
 
-import dj-database-url
+import dj_database_url
 
-db_from_env = dj-database-url.config()
+db_from_env = dj_database_url.config()
 DATABASE['default'].update(db_from_env)
 
 
